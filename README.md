@@ -58,14 +58,6 @@ fixnum kernel; other byte-aligned widths use a per-byte lookup table. The
 CRC-32 path processes on the order of a gigabyte per second on a typical
 laptop.
 
-## Migrating from the `crc32` package
-
-The old single-algorithm `crc32` package is now a thin compatibility shim
-over this one. Switch your dependency from `crc32` to `crc` and
-`(require crc)`; the same CRC-32 values (and then some) are available as
-`(crc-compute crc-32 ...)`, with incremental computation via
-`crc-begin`/`crc-extend`/`crc-result`.
-
 ## Notes
 
 - Byte-aligned widths (8+) use a 256-entry lookup table per algorithm;
@@ -75,6 +67,9 @@ over this one. Switch your dependency from `crc32` to `crc` and
   catalogue writes them; `refin`/`refout` control the reflection.
 - Non-catalogued widths are supported: `make-crc-params` accepts any width
   from 1 to 64 and a bit-by-bit path handles the sub-byte ones.
+- The former standalone `crc32` package has been folded into `crc` (its
+  incremental API lives on as `crc-begin`/`crc-extend`/`crc-result`); the
+  standalone package no longer exists.
 
 ## License
 

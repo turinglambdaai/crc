@@ -67,9 +67,6 @@ laptop.
   catalogue writes them; `refin`/`refout` control the reflection.
 - Non-catalogued widths are supported: `make-crc-params` accepts any width
   from 1 to 64 and a bit-by-bit path handles the sub-byte ones.
-- The former standalone `crc32` package has been folded into `crc` (its
-  incremental API lives on as `crc-begin`/`crc-extend`/`crc-result`); the
-  standalone package no longer exists.
 
 ## License
 

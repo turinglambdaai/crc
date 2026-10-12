@@ -115,7 +115,7 @@ working order, before any output transformation).
                      [end exact-nonnegative-integer? (bytes-length data)])
          exact-nonnegative-integer?]{
 
-Folds @racket[data[start,end)] into the raw register @racket[reg] and
+Folds @tt{data[start,end)} into the raw register @racket[reg] and
 returns the new register.  Registers are plain integers, so partial
 computations can be stored and resumed freely.
 }

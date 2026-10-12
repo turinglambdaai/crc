@@ -35,6 +35,14 @@ raco pkg install crc
 (crc-compute crc-15/can #"123456789")  ; => #x59e
 (crc-digest crc-16/modbus #"payload")  ; => big-endian bytes
 
+;; incremental computation (raw register; store/resume freely)
+(define reg (crc-extend crc-32 (crc-begin crc-32) #"first chunk"))
+(set! reg (crc-extend crc-32 reg #"second chunk"))
+(crc-result crc-32 reg)                ; => same as one-shot over both
+
+;; streaming from a port (64 KiB chunks)
+(crc-input-port crc-32 (open-input-file "data.bin"))
+
 ;; custom algorithms
 (define p (make-crc-params 'my-crc 16 #x1021 #xFFFF #f #f #x8005 0xD64E))
 (crc-compute p #"123456789")
@@ -42,6 +50,21 @@ raco pkg install crc
 
 `crc-by-name` looks presets up by symbol, and `all-crcs` lists the whole
 catalogue.
+
+## Performance
+
+Reflected 32-bit algorithms (`crc-32`, `crc-32c`) run a slicing-by-8
+fixnum kernel; other byte-aligned widths use a per-byte lookup table. The
+CRC-32 path processes on the order of a gigabyte per second on a typical
+laptop.
+
+## Migrating from the `crc32` package
+
+The old single-algorithm `crc32` package is now a thin compatibility shim
+over this one. Switch your dependency from `crc32` to `crc` and
+`(require crc)`; the same CRC-32 values (and then some) are available as
+`(crc-compute crc-32 ...)`, with incremental computation via
+`crc-begin`/`crc-extend`/`crc-result`.
 
 ## Notes
 

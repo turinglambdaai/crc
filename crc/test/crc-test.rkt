@@ -50,6 +50,37 @@
   (check-equal? (bytes-length (crc-digest crc-4/itu check-string)) 1)
   (check-equal? (crc-digest crc-4/itu check-string) (bytes #x07)))
 
+(test-case "incremental API agrees with one-shot across all presets"
+  (define data (list->bytes (build-list 500 (lambda (i) (modulo (* i 13) 256)))))
+  (for ([p (in-list (all-crcs))])
+    (with-check-info (['algorithm (crc-params-name p)])
+      ;; 37-byte chunks: odd boundaries that cross no aligned edge
+      (define reg
+        (for/fold ([reg (crc-begin p)])
+                  ([i (in-range 0 (bytes-length data) 37)])
+          (crc-extend p reg data i (min (+ i 37) (bytes-length data)))))
+      (check-equal? (crc-result p reg) (crc-compute p data)))))
+
+(test-case "crc-32 raw register semantics (pins from the crc32 package suite)"
+  (check-equal? (crc-extend crc-32 (crc-begin crc-32) #"A") #x2C266174)
+  (check-equal? (crc-extend crc-32 (crc-extend crc-32 (crc-begin crc-32) #"A") #"B")
+                #xCF96B3F8)
+  (check-equal? (crc-result crc-32 (crc-extend crc-32 (crc-begin crc-32) #"ABC"))
+                #xA3830348))
+
+(test-case "standard CRC-32 vectors"
+  (check-equal? (crc-compute crc-32 #"message digest") #x20159D7F)
+  (check-equal? (crc-compute crc-32 #"abcdefghijklmnopqrstuvwxyz") #x4C2750BD)
+  (check-equal? (crc-compute crc-32 #"The quick brown fox jumps over the lazy dog")
+                #x414FA339))
+
+(test-case "crc-input-port streams across the 64KB buffer boundary"
+  (define big (list->bytes (build-list 200000 (lambda (i) (modulo i 251)))))
+  (check-equal? (crc-input-port crc-32 (open-input-bytes big))
+                (crc-compute crc-32 big))
+  (check-equal? (crc-input-port crc-16/modbus (open-input-bytes big))
+                (crc-compute crc-16/modbus big)))
+
 (test-case "catalogue lookup"
   (check-equal? (crc-by-name 'crc-32) crc-32)
   (check-equal? (crc-by-name 'nope) #f)

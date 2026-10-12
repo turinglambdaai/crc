@@ -1,6 +1,6 @@
 #lang info
 
-(define version "0.1")
+(define version "0.2")
 ;; Multi-collection package shape: the collection is the `crc/` subdirectory.
 ;; `collection 'multi` is the standard declaration for this layout.
 (define collection 'multi)

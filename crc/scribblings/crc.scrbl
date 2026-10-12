@@ -102,6 +102,40 @@ Computes the CRC of @racket[data] as an integer no larger than
 @racket[(sub1 (expt 2 (crc-params-width p)))].
 }
 
+@defproc[(crc-begin [p crc-params?]) exact-nonnegative-integer?]{
+
+Starts an incremental computation: returns the raw CRC register (init in
+working order, before any output transformation).
+}
+
+@defproc[(crc-extend [p crc-params?]
+                     [reg exact-nonnegative-integer?]
+                     [data bytes?]
+                     [start exact-nonnegative-integer? 0]
+                     [end exact-nonnegative-integer? (bytes-length data)])
+         exact-nonnegative-integer?]{
+
+Folds @racket[data[start,end)] into the raw register @racket[reg] and
+returns the new register.  Registers are plain integers, so partial
+computations can be stored and resumed freely.
+}
+
+@defproc[(crc-result [p crc-params?]
+                     [reg exact-nonnegative-integer?])
+         exact-nonnegative-integer?]{
+
+Finishes an incremental computation: applies @racket[refout]/@racket[xorout]
+and returns the final CRC value.
+}
+
+@defproc[(crc-input-port [p crc-params?]
+                         [in (or/c input-port? #f)])
+         exact-nonnegative-integer?]{
+
+Computes the CRC of everything read from @racket[in] (default
+@racket[(current-input-port)]), reading in 64 KiB chunks.
+}
+
 @defproc[(crc-digest [p crc-params?] [data bytes?]) bytes?]{
 
 Computes the CRC and returns it as a big-endian byte string of the minimal
@@ -133,3 +167,20 @@ the table path, so this serves as an independent cross-check in tests.
 (define p (make-crc-params 'my-crc 16 #x1021 #xFFFF #f #f #x8005 0xD64E))
 (crc-compute p #"123456789")
 ]
+
+Incremental computation over a stream:
+
+@racketblock[
+(for/fold ([reg (crc-begin crc-32)])
+          ([chunk (in-producer read-chunk eof)])
+  (crc-extend crc-32 reg chunk))
+;; then (crc-result crc-32 reg)
+]
+
+@section{Performance}
+
+Reflected 32-bit algorithms (@racket[crc-32], @racket[crc-32c]) run a
+slicing-by-8 kernel; other byte-aligned widths use a per-byte lookup table.
+On a typical laptop the CRC-32 path processes on the order of a gigabyte per
+second.
+

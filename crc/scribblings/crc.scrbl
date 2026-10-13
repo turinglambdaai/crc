@@ -177,6 +177,35 @@ Incremental computation over a stream:
 ;; then (crc-result crc-32 reg)
 ]
 
+@section{Preset reference}
+
+Every preset is a @racket[crc-params?] value, usable directly by the
+engine or through @racket[crc-by-name].  The @tt{check} column of the
+catalogue table above is each preset's self-test against
+@racket[#"123456789"].
+
+@defthing[crc-8/smbus crc-params?]{SMBus packet error detection.}
+@defthing[crc-8/autosar crc-params?]{AUTOSAR E2E protection (profile 1).}
+@defthing[crc-8/sae-j1850 crc-params?]{SAE J1850 automotive bus.}
+@defthing[crc-8/maxim crc-params?]{Maxim 1-Wire devices (a reflected CRC-8).}
+@defthing[crc-8/dvb-s2 crc-params?]{DVB-S2 baseband frames.}
+@defthing[crc-8/rohc crc-params?]{Robust Header Compression (ROHC) FCS.}
+@defthing[crc-8/itu crc-params?]{ITU-T I.363 ATM HEC.}
+@defthing[crc-15/can crc-params?]{CAN frame CRC.}
+@defthing[crc-16/ccitt-false crc-params?]{The classic CCITT-False variant.}
+@defthing[crc-16/xmodem crc-params?]{XModem blocks (aka ZMODEM/V.41 CRC-16/AUG-CCITT family).}
+@defthing[crc-16/kermit crc-params?]{Kermit file transfer (reflected CCITT).}
+@defthing[crc-16/modbus crc-params?]{Modbus RTU frame check.}
+@defthing[crc-16/usb crc-params?]{USB data packets.}
+@defthing[crc-16/x-25 crc-params?]{X.25 HDLC FCS (aka PPP/Bluetooth).}
+@defthing[crc-16/genibus crc-params?]{GENIbus (a GENI/automotive diagnostic variant).}
+@defthing[crc-17/can-fd crc-params?]{CAN FD frame CRC (17-bit).}
+@defthing[crc-21/can-fd crc-params?]{CAN FD frame CRC (21-bit).}
+@defthing[crc-32 crc-params?]{The ubiquitous CRC-32 (Ethernet, zip, PNG).}
+@defthing[crc-32/bzip2 crc-params?]{bzip2's non-reflected CRC-32.}
+@defthing[crc-32c crc-params?]{Castagnoli CRC-32C (iSCSI, ext4, SSE 4.2).}
+@defthing[crc-32/autosar crc-params?]{AUTOSAR E2E protection (profile 4/5).}
+
 @section{Performance}
 
 Reflected 32-bit algorithms (@racket[crc-32], @racket[crc-32c]) run a

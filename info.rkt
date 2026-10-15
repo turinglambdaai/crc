@@ -12,7 +12,5 @@
 (define pkg-desc "CRC catalogue and generic engine (widths 1-64) weighted towards automotive and embedded use: CAN, CAN FD, AUTOSAR E2E, SAE J1850")
 (define pkg-authors '("turinglambdaai"))
 (define license 'MIT)
-;; Collection-level scribblings declaration: for multi packages the
-;; catalog doc build reads only this file, so the manual entry lives here.
-(define scribblings '(["crc/scribblings/crc.scrbl" ()]))
+;; Loading the scribblings as a "test" produces no tests and noise; skip it.
 (define test-omit-paths '("crc/scribblings"))

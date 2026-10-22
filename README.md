@@ -1,5 +1,7 @@
 # crc — CRC catalogue and engine for automotive and embedded use, in pure Racket
 
+**English** · [中文](README.zh-CN.md)
+
 [![CI](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml/badge.svg)](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 `crc` is a generic CRC engine (any width from 1 to 64 bits, with or without

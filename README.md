@@ -80,7 +80,7 @@ There is no hardware or network access in the example.
 From a local checkout (Racket and its `raco` tools installed):
 
 ```sh
-raco pkg install --auto --link .
+raco pkg install --auto --link "$(pwd)"
 raco test -p crc
 racket examples/quickstart.rkt
 raco setup -l crc --check-pkg-deps

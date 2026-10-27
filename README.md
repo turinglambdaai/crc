@@ -83,7 +83,7 @@ From a local checkout (Racket and its `raco` tools installed):
 raco pkg install --auto --link "$(pwd)"
 raco test -p crc
 racket examples/quickstart.rkt
-raco setup -l crc --check-pkg-deps
+raco setup --check-pkg-deps -l crc
 ```
 
 The package's `info.rkt` declares a multi-collection layout; the public

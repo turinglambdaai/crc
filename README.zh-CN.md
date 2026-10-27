@@ -65,7 +65,7 @@ raco pkg install crc
 在本地检出的仓库根目录（先安装 Racket 及 `raco`）运行：
 
 ```sh
-raco pkg install --auto --link .
+raco pkg install --auto --link "$(pwd)"
 raco test -p crc
 racket examples/quickstart.rkt
 raco setup -l crc --check-pkg-deps

@@ -43,11 +43,11 @@ raco pkg install crc
 (crc-result crc-32 reg)                ; => same as one-shot over both
 
 ;; streaming from a port (64 KiB chunks)
-(crc-input-port crc-32 (open-input-file "data.bin"))
+(crc-input-port crc-32 (open-input-bytes #"123456789")) ; => #xcbf43926
 
 ;; custom algorithms
-(define p (make-crc-params 'my-crc 16 #x1021 #xFFFF #f #f #x8005 0xD64E))
-(crc-compute p #"123456789")
+(define p (make-crc-params 'crc-16/genibus 16 #x1021 #xFFFF #f #f #xFFFF #xD64E))
+(crc-compute p #"123456789")            ; => #xd64e
 ```
 
 `crc-by-name` looks presets up by symbol, and `all-crcs` lists the whole
@@ -56,9 +56,7 @@ catalogue.
 ## Performance
 
 Reflected 32-bit algorithms (`crc-32`, `crc-32c`) run a slicing-by-8
-fixnum kernel; other byte-aligned widths use a per-byte lookup table. The
-CRC-32 path processes on the order of a gigabyte per second on a typical
-laptop.
+fixnum kernel; other byte-aligned widths use a per-byte lookup table. Throughput depends on Racket version, input size and hardware; benchmark your actual workload.
 
 ## Notes
 
@@ -69,6 +67,30 @@ laptop.
   catalogue writes them; `refin`/`refout` control the reflection.
 - Non-catalogued widths are supported: `make-crc-params` accepts any width
   from 1 to 64 and a bit-by-bit path handles the sub-byte ones.
+
+
+## API documentation and development
+
+The [Scribble API reference](crc/scribblings/crc.scrbl) defines all presets,
+contracts, parameter meanings, error behavior, incremental registers and
+streaming. A checked, standalone [quickstart](examples/quickstart.rkt) covers
+CRC-32, chunked input, streams and a custom CRC-16/GENIBUS configuration.
+There is no hardware or network access in the example.
+
+From a local checkout (Racket and its `raco` tools installed):
+
+```sh
+raco pkg install --auto --link .
+raco test -p crc
+racket examples/quickstart.rkt
+raco setup -l crc --check-pkg-deps
+```
+
+The package's `info.rkt` declares a multi-collection layout; the public
+`crc` collection registers its Scribble manual in `crc/info.rkt`.
+CI runs these checks on Linux, macOS and Windows. Report problems in
+[GitHub Issues](https://github.com/turinglambdaai/crc/issues), with a small
+reproducer and the Racket version.
 
 ## License
 

@@ -68,7 +68,7 @@ raco pkg install crc
 raco pkg install --auto --link "$(pwd)"
 raco test -p crc
 racket examples/quickstart.rkt
-raco setup -l crc --check-pkg-deps
+raco setup --check-pkg-deps -l crc
 ```
 
 本项目是 multi-collection package；`crc/info.rkt` 注册

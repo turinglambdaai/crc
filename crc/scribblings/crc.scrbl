@@ -3,7 +3,10 @@
 @(require scribble/manual
           (for-label crc
                      racket/base
-                     racket/contract))
+                     racket/contract)
+          scribble/example)
+
+@(define crc-eval (make-base-eval #:lang 'racket/base '(require crc)))
 
 @title{crc: CRC catalogue and engine for automotive and embedded use}
 @author{@(author+email "turinglambdaai" "turinglambdaai@users.noreply.github.com")}
@@ -157,24 +160,25 @@ the table path, so this serves as an independent cross-check in tests.
 
 @section{Example}
 
-@racketblock[
-(require crc)
+The following examples are @emph{evaluated when Scribble builds the manual}, so
+syntax and expected values cannot drift silently:
 
-(crc-compute crc-32 #"123456789")      ; => #xcbf43926
-(crc-compute crc-15/can #"123456789")  ; => #x59e
-(crc-digest crc-16/modbus #"payload")  ; => big-endian bytes
-
-(define p (make-crc-params 'my-crc 16 #x1021 #xFFFF #f #f #x8005 0xD64E))
+@examples[
+#:eval crc-eval
+(crc-compute crc-32 #"123456789")
+(crc-compute crc-15/can #"123456789")
+(define p (make-crc-params 'crc-16/genibus 16 #x1021 #xFFFF #f #f #xFFFF #xD64E))
 (crc-compute p #"123456789")
 ]
 
-Incremental computation over a stream:
+Incremental and stream computation (also checked by the package's executable
+quickstart and tests):
 
-@racketblock[
-(for/fold ([reg (crc-begin crc-32)])
-          ([chunk (in-producer read-chunk eof)])
-  (crc-extend crc-32 reg chunk))
-;; then (crc-result crc-32 reg)
+@examples[
+#:eval crc-eval
+(define reg (crc-extend crc-32 (crc-begin crc-32) #"1234"))
+(crc-result crc-32 (crc-extend crc-32 reg #"56789"))
+(crc-input-port crc-32 (open-input-bytes #"123456789"))
 ]
 
 @section{Preset reference}
@@ -210,6 +214,5 @@ catalogue table above is each preset's self-test against
 
 Reflected 32-bit algorithms (@racket[crc-32], @racket[crc-32c]) run a
 slicing-by-8 kernel; other byte-aligned widths use a per-byte lookup table.
-On a typical laptop the CRC-32 path processes on the order of a gigabyte per
-second.
+Throughput depends on Racket version, input size and hardware. Measure on the target workload before making performance commitments.
 

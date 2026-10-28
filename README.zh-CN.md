@@ -35,24 +35,46 @@ raco pkg install crc
 (crc-result crc-32 reg)                ; => same as one-shot over both
 
 ;; streaming from a port (64 KiB chunks)
-(crc-input-port crc-32 (open-input-file "data.bin"))
+(crc-input-port crc-32 (open-input-bytes #"123456789")) ; => #xcbf43926
 
 ;; custom algorithms
-(define p (make-crc-params 'my-crc 16 #x1021 #xFFFF #f #f #x8005 0xD64E))
-(crc-compute p #"123456789")
+(define p (make-crc-params 'crc-16/genibus 16 #x1021 #xFFFF #f #f #xFFFF #xD64E))
+(crc-compute p #"123456789")            ; => #xd64e
 ```
 
 `crc-by-name` 按符号查找预设，`all-crcs` 列出整个目录。
 
 ## 性能
 
-反射型 32 位算法（`crc-32`、`crc-32c`）运行 slicing-by-8 的 fixnum 内核；其他字节对齐宽度使用逐字节查找表。在典型笔记本上，CRC-32 路径的处理速度可达每秒约 1 GB 的量级。
+反射型 32 位算法（`crc-32`、`crc-32c`）运行 slicing-by-8 的 fixnum 内核；其他字节对齐宽度使用逐字节查找表。吞吐量取决于 Racket 版本、输入规模与硬件；性能应以目标环境的实际基准测试为准。
 
 ## 说明
 
 - 字节对齐宽度（8 及以上）为每个算法使用一张 256 项查找表；更窄的宽度（以及导出的 `crc-compute/bitwise`）使用逐位参考循环。
 - `poly`/`init` 始终以正常（未反射）形式给出，与目录中的写法完全一致；`refin`/`refout` 控制反射。
 - 支持目录之外的宽度：`make-crc-params` 接受 1 到 64 的任意宽度，子字节宽度由逐位路径处理。
+
+
+## API 文档与开发
+
+完整的参数、契约、错误语义、增量寄存器和流式处理请查阅
+[Scribble API 文档](crc/scribblings/crc.scrbl)。独立的
+[可执行入门示例](examples/quickstart.rkt)验证 CRC-32、分块计算、
+输入端口和自定义 CRC-16/GENIBUS 参数；示例不访问网络或硬件。
+
+在本地检出的仓库根目录（先安装 Racket 及 `raco`）运行：
+
+```sh
+raco pkg install --auto --link "$(pwd)"
+raco test -p crc
+racket examples/quickstart.rkt
+raco setup --check-pkg-deps -l crc
+```
+
+本项目是 multi-collection package；`crc/info.rkt` 注册
+`crc` collection 的 Scribble 文档。CI 在 Linux、macOS、Windows
+执行这些检查。反馈请在 [GitHub Issues](https://github.com/turinglambdaai/crc/issues)
+附最小复现、Racket 版本及实际输出。
 
 ## 许可证
 

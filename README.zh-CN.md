@@ -2,7 +2,7 @@
 
 [English](README.md) · **中文**
 
-[![CI](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml/badge.svg)](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/turlamai/crc/actions/workflows/ci.yml/badge.svg)](https://github.com/turlamai/crc/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 `crc` 是一个通用 CRC 引擎（宽度 1 到 64 位任意，支持或不支持输入/输出反射与最终 XOR），并附带一份收录 **21 组现成参数集** 的目录，偏重汽车与嵌入式应用：
 
@@ -73,7 +73,7 @@ raco setup --check-pkg-deps -l crc
 
 本项目是 multi-collection package；`crc/info.rkt` 注册
 `crc` collection 的 Scribble 文档。CI 在 Linux、macOS、Windows
-执行这些检查。反馈请在 [GitHub Issues](https://github.com/turinglambdaai/crc/issues)
+执行这些检查。反馈请在 [GitHub Issues](https://github.com/turlamai/crc/issues)
 附最小复现、Racket 版本及实际输出。
 
 ## 许可证

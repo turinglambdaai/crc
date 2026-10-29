@@ -10,7 +10,7 @@
 (define deps '("base" "rackunit-lib"))
 (define build-deps '("base" "scribble-lib" "racket-doc" "rackunit-lib"))
 (define pkg-desc "CRC catalogue and generic engine (widths 1-64) weighted towards automotive and embedded use: CAN, CAN FD, AUTOSAR E2E, SAE J1850")
-(define pkg-authors '("turinglambdaai"))
+(define pkg-authors '("turlamai"))
 (define license 'MIT)
 ;; Loading the scribblings as a "test" produces no tests and noise; skip it.
 (define test-omit-paths '("crc/scribblings"))

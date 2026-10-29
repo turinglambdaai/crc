@@ -2,7 +2,7 @@
 
 **English** · [中文](README.zh-CN.md)
 
-[![CI](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml/badge.svg)](https://github.com/turinglambdaai/crc/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/turlamai/crc/actions/workflows/ci.yml/badge.svg)](https://github.com/turlamai/crc/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 `crc` is a generic CRC engine (any width from 1 to 64 bits, with or without
 input/output reflection and final XOR) plus a catalogue of **21 ready-made
@@ -89,7 +89,7 @@ raco setup --check-pkg-deps -l crc
 The package's `info.rkt` declares a multi-collection layout; the public
 `crc` collection registers its Scribble manual in `crc/info.rkt`.
 CI runs these checks on Linux, macOS and Windows. Report problems in
-[GitHub Issues](https://github.com/turinglambdaai/crc/issues), with a small
+[GitHub Issues](https://github.com/turlamai/crc/issues), with a small
 reproducer and the Racket version.
 
 ## License
